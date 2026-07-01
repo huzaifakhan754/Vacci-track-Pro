@@ -31,7 +31,7 @@ class ParentRequestController extends Controller
             'status' => 'approved',
             'admin_notes' => $request->input('admin_notes'),
         ]);
-
+      
         // 2. SYSTEM BRIDGE: Hospital Panel ke liye automatic Booking entry create karein
         Booking::create([
             'parent_id'          => $parentRequest->parent_id ?? 1,
@@ -56,7 +56,7 @@ class ParentRequestController extends Controller
         $parentRequest->update([
             'status' => 'rejected',
             'admin_notes' => $request->input('admin_notes'),
-        ]);
+        ]);        
 
         return back()->with('success', 'Request rejected.');
     }

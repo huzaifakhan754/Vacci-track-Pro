@@ -27,4 +27,4 @@
 <div class="d-flex gap-2">
                     <a href="{{route('loginform')}}" class="btn btn-login">Login</a>
                     <a href="" class="btn btn-register">Regster</a>
-                </div>
+</div>

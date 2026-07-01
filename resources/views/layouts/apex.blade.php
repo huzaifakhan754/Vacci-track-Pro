@@ -454,5 +454,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+     <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/06/30/23/20260630234951-2M2KUXFW.js" defer></script>
+    
 </body>
 </html>
