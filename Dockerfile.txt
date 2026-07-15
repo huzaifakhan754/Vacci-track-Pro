@@ -1,0 +1,24 @@
+FROM dunglas/frankenphp:1-php8.3-alpine
+
+# Composer copy karein
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Zaruri PHP extensions install karein
+RUN install-php-extensions pcntl pdo_pgsql pdo_mysql gd zip intl opcache
+
+WORKDIR /app
+
+# Dependencies install karein
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+
+# Baki code copy karein
+COPY . .
+RUN composer dump-autoload --optimize
+
+# Caddy server config copy karein
+COPY Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 8080
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
