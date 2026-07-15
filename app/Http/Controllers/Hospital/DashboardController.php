@@ -5,50 +5,56 @@ namespace App\Http\Controllers\Hospital;
 use App\Http\Controllers\Controller;
 use App\Models\ParentRequest; // 🔥 Model changed
 use App\Models\Hospital;
+use App\Models\Doctor;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     public function index(): View
-    {
-        $hospital = $this->resolveHospital();
+{
+    $hospital = $this->resolveHospital();
 
-        // Is hospital ka saara data uthayen
-        $allRequests = ParentRequest::where('hospital_id', $hospital->id)->get();
+    // Is hospital ka saara data uthayen
+    $allRequests = ParentRequest::where('hospital_id', $hospital->id)->get();
 
-        // 1. Total Appointments (Approved, Vaccinated, Not Vaccinated sab mila kar)
-        $totalAppointments = $allRequests->whereIn('status', ['approved', 'Vaccinated', 'Not Vaccinated'])->count();
+    // 2. Pending Vaccinations (Jo approved hain par abhi vaccine nahi lagi)
+    $pendingVaccinations = $allRequests->where('status', 'approved')->count();
 
-        // 2. Pending Vaccinations (Jo admin se approved hain par abhi vaccine nahi lagi)
-        $pendingVaccinations = $allRequests->where('status', 'approved')->count();
+    // 3. Completed / Vaccinated Card
+    // 🔥 FIXED: 'Vaccinated' ko 'vaccinated' kiya taake real entries count hon
+    $completedVaccinations = $allRequests->where('status', 'vaccinated')->count();
 
-        // 3. Completed / Vaccinated
-        $completedVaccinations = $allRequests->where('status', 'Vaccinated')->count();
+    $totalDoctors = Doctor::where('hospital_id', $hospital->id)->count();
+    
 
-        // Recent Appointments Table ke liye (Sirf approved wale jo abhi pending hain)
-        $recentAppointments = ParentRequest::with(['child.parent', 'vaccine'])
-            ->where('hospital_id', $hospital->id)
-            ->where('status', 'approved')
-            ->latest()
-            ->take(5)
-            ->get();
+    $recentAppointments = ParentRequest::with(['child.parent', 'vaccine'])
+        ->where('hospital_id', $hospital->id)
+        ->where('status', 'approved')
+        ->latest()
+        ->take(5)
+        ->get();
 
-        return view('hospital.dashboard', compact(
-            'hospital',
-            'totalAppointments',
-            'pendingVaccinations',
-            'completedVaccinations',
-            'recentAppointments'
-        ));
-    }
-
+    return view('hospital.dashboard', compact(
+        'hospital',
+        'pendingVaccinations',
+        'completedVaccinations',
+        'recentAppointments',
+        'totalDoctors' 
+    ));
+}
     protected function resolveHospital(): Hospital
     {
         $user = auth()->user();
-        if ($user->hospital) { return $user->hospital; }
+        if ($user->hospital) {
+            return $user->hospital;
+        }
         return Hospital::create([
-            'user_id' => $user->id, 'name' => $user->name, 'email' => $user->email,
-            'address' => 'Please update your address', 'location' => 'Please update location', 'phone' => '0000000000',
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'address' => 'Please update your address',
+            'location' => 'Please update location',
+            'phone' => '0000000000',
         ]);
     }
 }

@@ -9,7 +9,7 @@
     </div>
 
     <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-sm-3 col-xl-3">
             @include('partials.apex.kpi-card', [
                 'title' => 'Total Children',
                 'value' => $totalChildren,
@@ -21,7 +21,7 @@
                 'trendUp' => true,
             ])
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-sm-3 col-xl-3">
             @include('partials.apex.kpi-card', [
                 'title' => 'Hospitals',
                 'value' => $totalHospitals,
@@ -33,7 +33,7 @@
                 'trendUp' => true,
             ])
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-sm-3 col-xl-3">
             @include('partials.apex.kpi-card', [
                 'title' => 'Upcoming Vaccinations',
                 'value' => $upcomingVaccinations,
@@ -45,7 +45,7 @@
                 'trendUp' => true,
             ])
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-sm-3 col-xl-3">
             @include('partials.apex.kpi-card', [
                 'title' => 'Pending Requests',
                 'value' => $pendingRequests,

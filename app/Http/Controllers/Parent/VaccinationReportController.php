@@ -7,6 +7,7 @@ use App\Models\ParentRequest;
 use App\Models\Child;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class VaccinationReportController extends Controller
 {
@@ -70,10 +71,16 @@ class VaccinationReportController extends Controller
             ->where('status', 'vaccinated')
             ->get();
 
-        $content = view('parent.reports.pdf', compact('child', 'allVaccines', 'currentRequest'))->render();
+        // 1. Apne HTML view ko PDF instance mein load karein
+        $pdf = Pdf::loadView('parent.reports.pdf', compact('child', 'allVaccines', 'currentRequest'));
         
-        return response($content)
-            ->header('Content-Type', 'text/html')
-            ->header('Content-Disposition', 'attachment; filename="vaccination-report-'.$child->name.'.html"');
+        // (Optional) Agar page size ya orientation set karni ho (Default A4 hota hai)
+        $pdf->setPaper('a4', 'portrait');
+
+        // 2. File name clean banayein (spaces ko hyphens se replace kar dein)
+        $fileName = 'vaccination-report-' . str_replace(' ', '-', strtolower($child->name)) . '.pdf';
+
+        // 3. Browser ko force download bhein as PDF
+        return $pdf->download($fileName);
     }
 }

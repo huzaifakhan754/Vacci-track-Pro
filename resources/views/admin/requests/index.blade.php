@@ -26,7 +26,7 @@
                     <tbody>
                         @forelse ($requests as $parentRequest)
                             <tr>
-                                <td class="ps-3">{{ $parentRequest->parent->name }}</td>
+                                <td class="ps-3">{{ $parentRequest->parent->name ?? '—'  }}</td>
                                 <td>{{ $parentRequest->child->name }}</td>
                                 <td>{{ $parentRequest->hospital?->name ?? '—' }}</td>
                                 <td>{{ $parentRequest->vaccine?->name ?? '—' }}</td>

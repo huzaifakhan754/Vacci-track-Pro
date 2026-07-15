@@ -33,43 +33,29 @@
                     <li class="nav-item"><a class="nav-link nav-link-vacci" href="#features">Vaccines</a></li>
                     <li class="nav-item"><a class="nav-link nav-link-vacci" href="#about">About</a></li>
                 </ul>
-               <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
-            @if (Route::has('login'))
-                <nav class="flex items-center justify-end gap-4">
-                    @auth
-                        <a
-                            href="{{ url('/dashboard') }}"
-                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal btn-login"
-                        >
-                            Dashboard
-                        </a>
-                    @else
-                        <a
-                            href="{{ route('login') }}"
-                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal btn btn-login"
-                        >
-                            Log in
-                        </a>
-
-                        @if (Route::has('register'))
-                            <a
-                                href="{{ route('register') }}"
-                                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal btn btn-register">
-                                Register
+                @if (Route::has('login'))
+                    <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end gap-2 mt-3 mt-lg-0">
+                        @auth
+                            <a href="{{ url('/dashboard') }}" class="btn btn-login px-4 py-2">
+                                Dashboard
                             </a>
-                        @endif
-                    @endauth
-                </nav>
-            @endif
-        </header>
-       
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-login px-4 py-2">
+                                Log in
+                            </a>
 
-        @if (Route::has('login'))
-            <div class="h-14.5 hidden lg:block"></div>
-        @endif
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn btn-register px-4 py-2">
+                                    Register
+                                </a>
+                            @endif
+                        @endauth
+                    </div>
+                @endif
             </div>
         </div>
     </nav>
+
     <!-- ==================== HERO ==================== -->
     <section class="hero-section" id="home">
         <div class="container">
@@ -263,7 +249,7 @@
                         </button>
                     </div>
                 </div>
-                <!-- Card 4 (hidden by default for search demo) -->
+                <!-- Card 4 -->
                 <div class="col-lg-4 col-md-6 hospital-col reveal" data-name="rainbow health hub chennai measles varicella">
                     <div class="hospital-card">
                         <img src="https://www.cgh-k.com/assets/img/about.jpg" alt="Rainbow Health Hub" class="hospital-img">
@@ -397,31 +383,32 @@
     <!-- ==================== LOGIN MODAL ==================== -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel"><i class="bi bi-box-arrow-in-right" style="color:var(--primary)"></i> Welcome Back</h5>
+            <div class="modal-content shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="loginModalLabel"><i class="bi bi-box-arrow-in-right text-primary me-2"></i> Welcome Back</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="loginForm">
+                    <form id="loginForm" method="POST" action="{{ route('login') }}">
+                        @csrf
                         <div class="mb-3">
-                            <label class="form-label-vacci">Email Address</label>
-                            <input type="email" class="form-control form-control-vacci" placeholder="you@example.com" required>
+                            <label class="form-label-vacci" for="loginEmail">Email Address</label>
+                            <input id="loginEmail" name="email" type="email" class="form-control form-control-vacci" placeholder="you@example.com" required autocomplete="username">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label-vacci">Password</label>
-                            <input type="password" class="form-control form-control-vacci" placeholder="Enter your password" required>
+                            <label class="form-label-vacci" for="loginPassword">Password</label>
+                            <input id="loginPassword" name="password" type="password" class="form-control form-control-vacci" placeholder="Enter your password" required autocomplete="current-password">
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <input class="form-check-input" type="checkbox" id="rememberMe" name="remember">
                                 <label class="form-check-label" for="rememberMe" style="font-size:0.85rem;">Remember me</label>
                             </div>
-                            <a href="#" style="font-size:0.85rem; color:var(--primary); text-decoration:none;">Forgot password?</a>
+                            <a href="{{ route('password.request') }}" class="text-decoration-none" style="font-size:0.85rem; color:var(--primary);">Forgot password?</a>
                         </div>
                         <button type="submit" class="btn btn-submit">Login</button>
                         <p class="text-center mt-3" style="font-size:0.85rem; color:var(--text-light);">
-                            Don't have an account? <a href="#" style="color:var(--primary); font-weight:600; text-decoration:none;" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a>
+                            Don't have an account? <a href="#" class="text-primary fw-semibold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a>
                         </p>
                     </form>
                 </div>
@@ -431,13 +418,53 @@
 
     <!-- ==================== REGISTER MODAL ==================== -->
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="registerModalLabel"><i class="bi bi-person-plus-fill" style="color:var(--primary)"></i> Create Account</h5>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="registerModalLabel"><i class="bi bi-person-plus-fill text-primary me-2"></i> Create Account</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
+                <div class="modal-body">
+                    <form id="registerForm" method="POST" action="{{ route('register') }}">
+                        @csrf
+                        <div class="row gx-3">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label class="form-label-vacci" for="registerName">Full name</label>
+                                <input id="registerName" name="name" type="text" class="form-control form-control-vacci" placeholder="John Doe" required autocomplete="name">
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label class="form-label-vacci" for="registerEmail">Email Address</label>
+                                <input id="registerEmail" name="email" type="email" class="form-control form-control-vacci" placeholder="you@example.com" required autocomplete="username">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-vacci" for="registerPhone">Phone Number</label>
+                            <input id="registerPhone" name="phone_no" type="tel" class="form-control form-control-vacci" placeholder="+91 98765 43210" required autocomplete="tel">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-vacci" for="registerRole">Register as</label>
+                            <select id="registerRole" name="role" class="form-select form-control-vacci" required>
+                                <option value="" disabled selected>Select role</option>
+                                <option value="parent">Parent</option>
+                                <option value="hospital">Hospital</option>
+                            </select>
+                        </div>
+                        <div class="row gx-3">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label class="form-label-vacci" for="registerPassword">Password</label>
+                                <input id="registerPassword" name="password" type="password" class="form-control form-control-vacci" placeholder="Create a secure password" required autocomplete="new-password">
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label class="form-label-vacci" for="registerPasswordConfirmation">Confirm Password</label>
+                                <input id="registerPasswordConfirmation" name="password_confirmation" type="password" class="form-control form-control-vacci" placeholder="Repeat your password" required autocomplete="new-password">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-submit w-100">Create account</button>
+                        <p class="text-center mt-3" style="font-size:0.85rem; color:var(--text-light);">
+                            Already have an account? <a href="#" class="text-primary fw-semibold" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -570,19 +597,25 @@
         }
 
         // ============ FORM SUBMISSIONS ============
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-            modal.hide();
-            showToastCustom('Login Successful', 'Welcome back! Redirecting to your dashboard...', 'bi-check-circle-fill');
-        });
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                if (modal) modal.hide();
+                showToastCustom('Login Successful', 'Welcome back! Redirecting to your dashboard...', 'bi-check-circle-fill');
+            });
+        }
 
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-            modal.hide();
-            showToastCustom('Account Created', 'Welcome to VacciTrack ! Your account has been created successfully.', 'bi-check-circle-fill');
-        });
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                if (modal) modal.hide();
+                showToastCustom('Account Created', 'Welcome to VacciTrack ! Your account has been created successfully.', 'bi-check-circle-fill');
+            });
+        }
 
         function showToastCustom(title, message, icon) {
             const toast = document.getElementById('vacciToast');
@@ -634,11 +667,8 @@
         });
     </script>
     
-    
     <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/06/30/23/20260630234951-2M2KUXFW.js" defer></script>
-    
-    
+    <script src="https://files.bpcontent.cloud/2026/06/30/23/20260630234951-2M2KUXFW.js" defer></script>
 </body>
 
 </html>

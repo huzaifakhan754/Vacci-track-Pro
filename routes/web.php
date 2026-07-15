@@ -15,6 +15,8 @@ use App\Http\Controllers\Parent\HospitalBookingController;
 use App\Http\Controllers\Parent\VaccinationDateController as ParentVaccinationDateController;
 use App\Http\Controllers\Parent\VaccinationReportController as ParentVaccinationReportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Hospital\DrController;
+use App\Http\Controllers\Parent\appoinmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,15 +47,25 @@ Route::prefix('parent')->middleware(['auth', 'verified', 'role.parent'])->name('
     Route::get('/reports', [ParentVaccinationReportController::class, 'index'])->name('reports.index');
     Route::post('/parent/bookings/already-vaccinated', [HospitalBookingController::class, 'markAlreadyVaccinated'])->name('parent.bookings.already-vaccinated');
     Route::get('/reports/download/{id}', [ParentVaccinationReportController::class, 'download'])->name('reports.download');
-    Route::get('/reports/download/{id}', [ParentVaccinationReportController::class, 'download'])->name('reports.download');
     Route::get('/reports/view/{id}', [ParentVaccinationReportController::class, 'viewPdf'])->name('reports.view');
+    Route::get('/myappointments', [AppoinmentController::class, 'index'])->name('appointments.index');
+Route::get('/parent/meeting/join/{id}', [AppoinmentController::class, 'joinMeeting'])
+    ->name('meeting.join');
+    /// api
+    Route::get('/api/get-doctors/{hospital_id}', [HospitalBookingController::class, 'getDoctorsByHospital']);
+    Route::get('/api/doctor-status/{doctor_id}', [App\Http\Controllers\Parent\HospitalBookingController::class, 'getDoctorStatus']);
 });
 
 
 Route::prefix('hospital')->middleware(['auth', 'verified', 'role.hospital'])->name('hospital.')->group(function () {
     Route::get('/dashboard', [HospitalDashboardController::class, 'index'])->name('dashboard');
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/docters', [DrController::class, 'index'])->name('docters.index');
+    Route::post('/docters/store', [DrController::class, 'store'])->name('docters.store');
     Route::patch('/appointments/{id}', [AppointmentController::class, 'updateStatus'])->name('appointments.update');
+    //api
+Route::get('/doctors/toggle-status/{id}', [App\Http\Controllers\Hospital\DrController::class, 'toggleStatus'])->name('docters.toggle-status');
+Route::delete('/docters/destroy/{id}', [DrController::class, 'destroy'])->name('docters.destroy');
 });
 
 Route::get('/dashboard', function () {

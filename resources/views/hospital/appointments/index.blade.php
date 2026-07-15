@@ -18,9 +18,8 @@
                         <th>Child</th>
                         <th>Vaccine</th>
                         <th>Booking Date</th>
-                        <th>Booking Status</th>
-                        <th>Vaccination Status</th>
-                        <th class="text-end pe-3">Actions</th>
+                        <th>Booking Status</th>                        
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,19 +31,15 @@
                         <td>{{ $appointment->preferred_date->format('M d, Y') }}</td>
                         <td>
                             <span class="badge bg-primary">{{ ucfirst($appointment->status) }}</span>
-                        </td>
+                        </td>                        
                         <td>
-                            <span class="badge bg-secondary">{{ ucfirst(str_replace('_', ' ', $appointment->vaccination_status)) }}</span>
-                        </td>
-                        <td class="align-middle text-end" style="width: 190px;">
-                            <div class="d-flex flex-column gap-2">
-
+                            <div class="d-flex flex-row gap-2">
                                 <form action="{{ route('hospital.appointments.update', $appointment->id) }}" method="POST" class="m-0">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="vaccination_status" value="vaccinated">
                                     <button type="submit" class="btn w-100 d-flex align-items-center justify-content-center gap-2 fw-bold text-white shadow-sm"
-                                        style="background: linear-gradient(45deg, #2ecc71, #27ae60); border: none; border-radius: 6px; padding: 8px 16px; transition: all 0.2s ease; font-size: 0.9rem;">
+                                        style="background: linear-gradient(45deg, #2ecc71, #27ae60); border: none; border-radius: 6px; padding: 5px 10px; transition: all 0.2s ease; font-size: 0.9rem;">
                                         <i class="bi bi-check2-circle" style="font-size: 1.1rem;"></i>
                                         Vaccinated
                                     </button>
@@ -55,9 +50,9 @@
                                     @method('PATCH')
                                     <input type="hidden" name="vaccination_status" value="not_vaccinated">
                                     <button type="submit" class="btn w-100 d-flex align-items-center justify-content-center gap-2 fw-semibold btn-outline-danger shadow-sm"
-                                        style="border-radius: 6px; padding: 7px 15px; border-width: 2px; transition: all 0.2s ease; font-size: 0.9rem;">
+                                        style="border-radius: 6px; padding: 5px 10px; border-width: 2px; transition: all 0.2s ease; font-size: 0.9rem;">
                                         <i class="bi bi-x-circle" style="font-size: 1rem;"></i>
-                                        Not Vaccinated
+                                        Reject
                                     </button>
                                 </form>
 

@@ -23,7 +23,7 @@
                         <form action="{{ route('parent.bookings.store') }}" method="POST">
                             @csrf
                             
-                            {{-- 1. Child Selection (Auto-selects if data comes from dashboard button) --}}
+                            {{-- 1. Child Selection (Auto-selects) --}}
                             <div class="mb-3">
                                 <label for="child_id" class="form-label">Child</label>
                                 <select class="form-select @error('child_id') is-invalid @enderror" id="child_id" name="child_id" required>
@@ -38,10 +38,10 @@
                                 @error('child_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            {{-- 2. Hospital Selection (Manual selection by parent) --}}
+                            {{-- 2. Hospital Selection (Naya badlav: onchange function lagayi h) --}}
                             <div class="mb-3">
                                 <label for="hospital_id" class="form-label">Hospital</label>
-                                <select class="form-select @error('hospital_id') is-invalid @enderror" id="hospital_id" name="hospital_id" required>
+                                <select class="form-select @error('hospital_id') is-invalid @enderror" id="hospital_id" name="hospital_id" onchange="fetchDoctors(this.value)" required>
                                     <option value="">Select hospital</option>
                                     @foreach ($hospitals as $hospital)
                                         <option value="{{ $hospital->id }}" @selected(old('hospital_id') == $hospital->id)>
@@ -52,7 +52,16 @@
                                 @error('hospital_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            {{-- 3. Vaccine Selection (Auto-selects if data comes from dashboard button) --}}
+                            {{-- NAYA FEATURE: 2.5 Doctor Selection (Shuru me disabled rahega) --}}
+                            <div class="mb-3">
+                                <label for="doctor_id" class="form-label">Select Doctor</label>
+                                <select class="form-select @error('doctor_id') is-invalid @enderror" id="doctor-select" name="doctor_id" disabled>
+                                    <option value="">-- Select Hospital First --</option>
+                                </select>
+                                @error('doctor_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
+                            {{-- 3. Vaccine Selection (Auto-selects) --}}
                             <div class="mb-3">
                                 <label for="vaccine_id" class="form-label">Vaccine</label>
                                 <select class="form-select @error('vaccine_id') is-invalid @enderror" id="vaccine_id" name="vaccine_id" required>
@@ -67,7 +76,7 @@
                                 @error('vaccine_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
-                            {{-- 4. Preferred Date (Auto-fills from dashboard or allows fresh input) --}}
+                            {{-- 4. Preferred Date (Auto-fills) --}}
                             <div class="mb-3">
                                 <label for="preferred_date" class="form-label">Preferred Date</label>
                                 <input type="date" class="form-control @error('preferred_date') is-invalid @enderror" id="preferred_date" name="preferred_date"
@@ -167,23 +176,44 @@
             </div>
         </div>
     </div>
+
+    {{-- NAYA FEATURE: JAVASCRIPT LOGIC FOR DYNAMIC DROPDOWN --}}
+    <script>
+    function fetchDoctors(hospitalId) {
+        const doctorSelect = document.getElementById('doctor-select');
+        
+        // Agar hospital select nahi kiya, to dropdown disable rakho
+        if (!hospitalId) {
+            doctorSelect.innerHTML = '<option value="">-- Select Hospital First --</option>';
+            doctorSelect.disabled = true;
+            return;
+        }
+
+        // Background me call bhejna data fetch krne ke liye
+        fetch(`/parent/api/get-doctors/${hospitalId}`)
+            .then(response => response.json())
+            .then(data => {
+                doctorSelect.innerHTML = '<option value="">-- Choose Doctor --</option>';
+                
+                if (data.length === 0) {
+                    doctorSelect.innerHTML = '<option value="">No Doctor Available in this Hospital</option>';
+                    doctorSelect.disabled = false;
+                    return;
+                }
+
+                // Loop chala kar sirf us hospital ke doctors list me push karna
+                data.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = doctor.name;
+                    doctorSelect.appendChild(option);
+                });
+
+                doctorSelect.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error fetching doctors:', error);
+            });
+    }
+    </script>
 @endsection
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

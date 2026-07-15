@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Hospital;
 use App\Models\ParentRequest;
 use App\Models\Vaccine;
+use App\Models\Doctor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,13 +26,15 @@ class HospitalBookingController extends Controller
         return view('parent.bookings.index', compact('hospitals', 'children', 'vaccines', 'requests'));
     }
 
-    
+
 
     public function store(Request $request): RedirectResponse
     {
+        // 1. Validation mein 'doctor_id' ko add kiya
         $validated = $request->validate([
             'child_id' => ['required', 'exists:children,id'],
             'hospital_id' => ['required', 'exists:hospitals,id'],
+            'doctor_id' => ['required', 'exists:doctors,id'],
             'vaccine_id' => ['required', 'exists:vaccines,id'],
             'preferred_date' => ['required', 'date', 'after_or_equal:today'],
             'message' => ['nullable', 'string', 'max:1000'],
@@ -39,10 +42,12 @@ class HospitalBookingController extends Controller
 
         $child = auth()->user()->children()->findOrFail($validated['child_id']);
 
+        // 2. Database insertion mein bhi 'doctor_id' pass kar diya
         ParentRequest::create([
             'parent_id' => auth()->id(),
             'child_id' => $child->id,
             'hospital_id' => $validated['hospital_id'],
+            'doctor_id' => $validated['doctor_id'], // 👈 Yeh ab database me chala jayega
             'vaccine_id' => $validated['vaccine_id'],
             'preferred_date' => $validated['preferred_date'],
             'message' => $validated['message'],
@@ -53,26 +58,31 @@ class HospitalBookingController extends Controller
             ->route('parent.bookings.index')
             ->with('success', 'Hospital appointment request submitted. Admin will approve or reject it.');
     }
-
     public function markAlreadyVaccinated(Request $request)
-{
-    $request->validate([
-        'child_id' => 'required|exists:children,id',
-        'vaccine_id' => 'required|exists:vaccines,id',
-        'preferred_date' => 'required|date',
-    ]);
+    {
+        $request->validate([
+            'child_id' => 'required|exists:children,id',
+            'vaccine_id' => 'required|exists:vaccines,id',
+            'preferred_date' => 'required|date',
+        ]);
 
-    // Database me direct Completed record insert kar dena
-    \App\Models\ParentRequest::create([
-        'parent_id' => auth()->id(),
-        'child_id' => $request->child_id,
-        'vaccine_id' => $request->vaccine_id,
-        'hospital_id' => null, // Kyunki kisi hospital se nahi lagwayi, khud mark kiya h
-        'preferred_date' => $request->preferred_date,
-        'status' => 'completed', // Direct completed!
-        'message' => 'Marked as already vaccinated by parent.',
-    ]);
+        // Database me direct Completed record insert kar dena
+        \App\Models\ParentRequest::create([
+            'parent_id' => auth()->id(),
+            'child_id' => $request->child_id,
+            'vaccine_id' => $request->vaccine_id,
+            'hospital_id' => null, // Kyunki kisi hospital se nahi lagwayi, khud mark kiya h
+            'preferred_date' => $request->preferred_date,
+            'status' => 'completed', // Direct completed!
+            'message' => 'Marked as already vaccinated by parent.',
+        ]);
 
-    return redirect()->back()->with('success', 'Vaccine marked as completed and moved to history.');
-}
+        return redirect()->back()->with('success', 'Vaccine marked as completed and moved to history.');
+    }
+
+    public function getDoctorsByHospital($hospital_id)
+    {
+        $doctors = Doctor::where('hospital_id', $hospital_id)->get(['id', 'name']);
+        return response()->json($doctors);
+    }
 }

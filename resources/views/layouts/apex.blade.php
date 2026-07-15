@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,11 +38,36 @@
             z-index: 1040;
             display: flex;
             flex-direction: column;
+            transition: transform 0.25s ease;
+        }
+
+        .apex-sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+
+        .apex-sidebar .apex-avatar {
+            min-width: 40px;
         }
 
         .apex-main {
             margin-left: 256px;
             min-height: 100vh;
+            transition: margin-left 0.25s ease;
+        }
+
+        .apex-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1035;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease;
+        }
+
+        .apex-backdrop.show {
+            opacity: 1;
+            visibility: visible;
         }
 
         .apex-nav-section {
@@ -420,32 +446,142 @@
             width: 100%;
         }
 
+        #menu{
+            display: none;
+        }
         @media (max-width: 991.98px) {
-            .apex-sidebar { transform: translateX(-100%); }
-            .apex-main { margin-left: 0; }
+            .apex-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .apex-main {
+                margin-left: 0;
+            }
+
+            .apex-header {
+                padding: 0 16px;
+                gap: 0.75rem;
+            }
+
+            .apex-search {
+                max-width: 100%;
+                width: 50%;
+            }
+
+            .apex-header .d-flex.align-items-center {
+                display: none;
+            }
+
+            button.apex-btn-primary {
+                display: none;
+            }
+
+            button.apex-icon-btn {
+                display: none;
+            }
+
+            .add-hos {
+                display: none;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .apex-search input {
+                padding: 10px 14px 10px 40px;
+            }
+
+            .apex-header {
+                height: auto;
+                padding: 0.75rem 16px;
+            }
+
+            .apex-header .apex-avatar {
+                width: 69px;
+                height: 50px;
+                font-size: 11px;
+            }
+           
+
+
+            .apex-icon-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .apex-btn-primary {
+                display: none;
+            }
+
+            .add-hos {
+                display: none;
+            }
+
+            #menu {
+                font-size: 1rem;
+                color: white;
+                background: #10b981;
+                width: 8vw;
+                justify-content: center;
+                display: flex;
+                text-align: center;
+                align-items: center;
+                height: 8vw;
+            }
+
+            #navbar{
+                display: none;
+            }
         }
     </style>
     @stack('styles')
 </head>
+
 <body>
+    @auth
+    @php
+    $hospitalId = auth()->user()->hospital?->id;
+    $navbarDoctor = $hospitalId ? \App\Models\Doctor::where('hospital_id', $hospitalId)->first() : null;
+    @endphp
+    @endauth
+
     @include('partials.apex.sidebar')
 
     <div class="apex-main">
-        @include('partials.apex.header')
+
+        {{-- WRAPPER TO FORCIBLY INJECT TOGGLE BUTTON RIGHT INSIDE NAVBAR HTML STRUCTURE --}}
+        <div class="position-relative">
+            @include('partials.apex.header')
+
+            {{-- JAVASCRIPT INJECTION TO PLACE BUTTON INSIDE THE FLEX HEADER --}}
+            @if(isset($navbarDoctor) && $navbarDoctor)
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const headerRightGroup = document.querySelector('.apex-header .d-flex.align-items-center') || document.querySelector('.apex-header');
+                    const toggleSource = document.getElementById('apex-navbar-toggle-source');
+                    if (headerRightGroup && toggleSource) {
+                        const formElement = toggleSource.querySelector('form');
+                        // Profile Avatar ya Bell icon se pehle toggle form inject karein
+                        headerRightGroup.insertBefore(formElement, headerRightGroup.firstChild);
+                    }
+                });
+            </script>
+            @endif
+        </div>
 
         <main class="apex-content">
             @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+            <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             @endif
 
             @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+            <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             @endif
 
             @yield('content')
@@ -454,8 +590,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
-     <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/06/30/23/20260630234951-2M2KUXFW.js" defer></script>
-    
+    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2026/06/30/23/20260630234951-2M2KUXFW.js" defer></script>
+    <script>
+        let btn = document.getElementById("apexSidebarToggle");
+        let sidebbar = document.getElementById('apex-sidebar');
+
+        var navCheck = false;
+
+        function toggleMenu() {
+            if (navCheck == false) {
+                sidebbar.style.transform = "translateX(0%)"
+                navCheck = true;
+                btn.innerHTML = "X";
+            } else {
+                navCheck = false;
+                sidebbar.style.transform = "translateX(-100%)"
+                btn.innerHTML = "☰";
+            }
+        }
+    </script>
 </body>
+
 </html>
