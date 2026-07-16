@@ -47,19 +47,25 @@
                                     </span>
                                 </td>
 
-                                <td>
-                                    @if($doctor->is_online == 1)
-                                    {{-- Green chota button --}}
-                                    <a href="{{ route('hospital.docters.toggle-status', $doctor->id) }}" class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold" style="font-size: 11px;">
-                                        <i class="bi bi-circle-fill text-white me-1" style="font-size: 6px;"></i>Online
-                                    </a>
-                                    @else
-                                    {{-- Grey chota button --}}
-                                    <a href="{{ route('hospital.docters.toggle-status', $doctor->id) }}" class="btn btn-sm btn-secondary rounded-pill px-2 py-1 fw-medium" style="background-color: #6B7280; border: none; font-size: 11px; color: white;">
-                                        <i class="bi bi-circle me-1" style="font-size: 6px;"></i> Offline
-                                    </a>
-                                    @endif
-                                </td>
+                              <td class="status-cell">
+    @if($doctor->is_online == 1)
+    {{-- Green Button --}}
+    <button type="button" 
+            data-url="{{ route('hospital.docters.toggle-status', $doctor->id) }}" 
+            class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold toggle-status-btn" 
+            style="font-size: 11px;">
+        <i class="bi bi-circle-fill text-white me-1" style="font-size: 6px;"></i>Online
+    </button>
+    @else
+    {{-- Grey Button --}}
+    <button type="button" 
+            data-url="{{ route('hospital.docters.toggle-status', $doctor->id) }}" 
+            class="btn btn-sm btn-secondary rounded-pill px-2 py-1 fw-medium toggle-status-btn" 
+            style="background-color: #6B7280; border: none; font-size: 11px; color: white;">
+        <i class="bi bi-circle me-1" style="font-size: 6px;"></i> Offline
+    </button>
+    @endif
+</td>
                                 <td>
                                     @if($doctor->google_meet_link)
                                     <span class="text-success fw-medium">
@@ -191,4 +197,56 @@
 
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Buttons par click event lagana
+    document.body.addEventListener('click', function (e) {
+        const button = e.target.closest('.toggle-status-btn');
+        if (!button) return;
+
+        e.preventDefault();
+
+        const url = button.getAttribute('data-url');
+        const parentTd = button.closest('.status-cell');
+
+        // Background call
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest', // Laravel ko batata hai ke AJAX request hai
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Bina page reload kiye UI change karna
+                if (data.is_online == 1) {
+                    parentTd.innerHTML = `
+                        <button type="button" 
+                                data-url="${url}" 
+                                class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold toggle-status-btn" 
+                                style="font-size: 11px;">
+                            <i class="bi bi-circle-fill text-white me-1" style="font-size: 6px;"></i>Online
+                        </button>
+                    `;
+                } else {
+                    parentTd.innerHTML = `
+                        <button type="button" 
+                                data-url="${url}" 
+                                class="btn btn-sm btn-secondary rounded-pill px-2 py-1 fw-medium toggle-status-btn" 
+                                style="background-color: #6B7280; border: none; font-size: 11px; color: white;">
+                            <i class="bi bi-circle me-1" style="font-size: 6px;"></i> Offline
+                        </button>
+                    `;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
 @endsection

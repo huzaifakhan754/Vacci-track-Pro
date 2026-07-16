@@ -319,7 +319,6 @@
                     </td>
                 </tr>
             </table>
-
             <div class="cert-id-bar">
                 <table class="cert-id-table">
                     <tr>

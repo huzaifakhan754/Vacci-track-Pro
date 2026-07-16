@@ -59,17 +59,26 @@ class DrController extends Controller
         return redirect()->back()->with('success', 'New doctor added successfully!');
     }
     public function toggleStatus($id)
-    {
-        // 1. URL se aane wali ID ke mutabiq specific doctor dhoondein
-        $doctor = \App\Models\Doctor::findOrFail($id);
+{
+    // 1. Doctor ko database se dhoondein
+    $doctor = \App\Models\Doctor::findOrFail($id);
 
-        // 2. Agar status 1 hai to 0 kar do, agar 0 hai to 1 kar do
-        $doctor->is_online = $doctor->is_online == 1 ? 0 : 1;
-        $doctor->save();
+    // 2. Status toggle karein
+    $doctor->is_online = $doctor->is_online == 1 ? 0 : 1;
+    $doctor->save();
 
-        // 3. Page ko refresh kar do bina kisi error ke
-        return redirect()->back()->with('success', 'Doctor status updated successfully!');
+    // 3. AGAR REQUEST AJAX SE HAI (Naya Tarika): Bina reload JSON response bhejo
+    if (request()->ajax() || request()->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'is_online' => $doctor->is_online,
+            'message' => 'Doctor status updated successfully!'
+        ]);
     }
+
+    // 4. AGAR NORMAL REQUEST HAI (Purana Tarika Fallback): Page ko refresh kar do
+    return redirect()->back()->with('success', 'Doctor status updated successfully!');
+}
     public function destroy($id)
 {
     // 1. Doctor ko ID se dhoondein
