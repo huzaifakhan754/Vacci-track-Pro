@@ -17,6 +17,7 @@
                             <th class="ps-3">Parent</th>
                             <th>Child</th>
                             <th>Hospital</th>
+                            <th>Doctor</th>
                             <th>Vaccine</th>
                             <th>Preferred Date</th>
                             <th>Status</th>
@@ -29,6 +30,7 @@
                                 <td class="ps-3">{{ $parentRequest->parent->name ?? '—'  }}</td>
                                 <td>{{ $parentRequest->child->name }}</td>
                                 <td>{{ $parentRequest->hospital?->name ?? '—' }}</td>
+                                <td>{{ $parentRequest->doctor?->name ?? '—' }}</td>
                                 <td>{{ $parentRequest->vaccine?->name ?? '—' }}</td>
                                 <td>{{ $parentRequest->preferred_date?->format('M d, Y') ?? '—' }}</td>
                                 <td>

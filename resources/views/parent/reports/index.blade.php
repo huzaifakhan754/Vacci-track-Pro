@@ -18,6 +18,8 @@
                             <th class="ps-3">Child</th>
                             <th>Vaccine</th>
                             <th>Scheduled Date</th>
+                            <th>Hospital</th>
+                            <th>Doctor Name</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -28,6 +30,8 @@
                             <td class="ps-3 fw-bold text-dark text-capitalize">{{ $report->child->name }}</td>
                             <td class="fw-semibold text-secondary">{{ $report->vaccine->name }}</td>
                             <td>{{ \Carbon\Carbon::parse($report->updated_at)->format('M d, Y') }}</td>
+                            <td>{{ $report->hospital->name ?? 'Registered Medical Center' }}</td>
+                            <td>{{ $report->doctor->name ?? 'N/A' }}</td>
                             <td>
                                 <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-bold">
                                     <i class="bi bi-check-circle-fill me-1"></i> Vaccinated

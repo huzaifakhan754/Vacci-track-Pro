@@ -372,6 +372,7 @@
                             <th style="width: 30%;">Vaccine Name</th>
                             <th style="width: 25%;">Date Administered</th>
                             <th style="width: 30%;">Authorized Hospital Center</th>
+                            <th style="width: 30%;">Doctor Name</th>
                             <th style="width: 15%; text-align: center;">Status</th>
                         </tr>
                     </thead>
@@ -381,6 +382,7 @@
                             <td><strong style="color: #ffffff;">{{ $vax->vaccine->name }}</strong></td>
                             <td>{{ \Carbon\Carbon::parse($vax->updated_at)->format('M d, Y') }}</td>
                             <td>{{ $vax->hospital->name ?? 'Registered Medical Center' }}</td>
+                            <td>{{ $vax->doctor->name ?? 'N/A' }}</td>
                             <td style="text-align: center;">
                                 <span class="badge">Vaccinated</span>
                             </td>
