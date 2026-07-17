@@ -57,4 +57,19 @@ class DashboardController extends Controller
             'phone' => '0000000000',
         ]);
     }
+
+    public function getDetails()
+    {
+        $hospital = $this->resolveHospital();
+
+        // Is hospital ki saari completed/vaccinated bookings uthayen
+        $history = ParentRequest::with(['child', 'vaccine'])
+            ->where('hospital_id', $hospital->id)
+            ->where('status', 'vaccinated') // Ya 'completed' jo bhi aap status rakhte hain
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return view('hospital.history.vaccineHistory', compact('history'));
+    }
+
 }

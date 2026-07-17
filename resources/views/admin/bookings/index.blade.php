@@ -48,7 +48,7 @@
             </td>
 
             <td class="align-middle">
-                @if($booking->status == 'approved' || $booking->status == 'completed')
+                @if($booking->status == 'vaccinated')
                     <span class="badge px-3 py-2 border border-success text-success bg-success-subtle rounded fw-bold" style="font-size: 0.8rem;">
                         Confirmed
                     </span>

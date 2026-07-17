@@ -17,6 +17,7 @@
                         <th class="ps-3">Parent</th>
                         <th>Child</th>
                         <th>Vaccine</th>
+                        <th>Dr Name</th>
                         <th>Booking Date</th>
                         <th>Booking Status</th>                        
                         <th>Actions</th>
@@ -28,6 +29,7 @@
                         <td class="ps-3">{{ $appointment->parent->name }}</td>
                         <td class="fw-medium">{{ $appointment->child->name }}</td>
                         <td>{{ $appointment->vaccine->name }}</td>
+                        <td>{{ $appointment->doctor->name }}</td>
                         <td>{{ $appointment->preferred_date->format('M d, Y') }}</td>
                         <td>
                             <span class="badge bg-primary">{{ ucfirst($appointment->status) }}</span>

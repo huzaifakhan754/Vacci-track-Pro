@@ -11,7 +11,7 @@ class Booking extends Model
         'parent_request_id',
         'parent_id',
         'child_id',
-        'hospital_id',
+        'hospital_id',        
         'vaccine_id',
         'vaccination_schedule_id',
         'booking_date',
@@ -37,6 +37,7 @@ class Booking extends Model
     {
         return $this->belongsTo(Child::class);
     }
+    
 
     public function hospital(): BelongsTo
     {

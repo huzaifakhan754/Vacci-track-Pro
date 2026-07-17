@@ -43,6 +43,7 @@
                             <th>PARENT</th>
                             <th>VACCINE</th>
                             <th>HOSPITAL</th>
+                            <th>DOCTOR</th>
                             <th>ADMINISTERED DATE</th>
                             <th>STATUS</th>
                         </tr>
@@ -67,7 +68,10 @@
                             <td class="text-muted">
                                 {{ $report->hospital->name ?? 'N/A' }}
                             </td>
-
+                           
+                            <td class="text-muted">
+                                {{ $report->doctor->name ?? 'N/A' }}
+                            </td>
                             <td class="text-success fw-medium">
                                 {{ $report->updated_at ? \Carbon\Carbon::parse($report->updated_at)->format('M d, Y') : 'Done' }}
                             </td>

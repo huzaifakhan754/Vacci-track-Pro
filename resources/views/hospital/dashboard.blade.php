@@ -113,37 +113,41 @@
 </div>
 
 <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold" id="addDoctorModalLabel">Add New Doctor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('hospital.docters.store') }}" method="POST">
-                    @csrf
-
-                    <div class="mb-3">
-                        <label class="form-label fw-medium small">Doctor Name</label>
-                        <input type="text" name="name" class="form-control form-control-sm rounded-3" placeholder="Enter doctor name" required>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 15px;">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="addDoctorModalLabel">Add New Doctor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                        <form action="{{ route('hospital.docters.store') }}" method="POST">
+                            @csrf
 
-                    <div class="mb-3">
-                        <label class="form-label fw-medium small">Specialization</label>
-                        <input type="text" name="specialization" class="form-control form-control-sm rounded-3" placeholder="e.g. Vaccinete" required>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-medium small">Doctor Name</label>
+                                <input type="text" name="name" class="form-control form-control-sm rounded-3" placeholder="Enter doctor name" required>
+                            </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-medium small">Google Meet Link</label>
-                        <input type="url" name="google_meet_link" class="form-control form-control-sm rounded-3" placeholder="https://meet.google.com/..." required>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-medium small">Specialization</label>
+                                <input type="text" name="specialization" class="form-control form-control-sm rounded-3" placeholder="e.g. Vaccinete" required>
+                            </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-sm btn-primary rounded-pill fw-bold">Save Doctor</button>
+                            <div class="mb-4">
+                                <label class="form-label fw-medium small">Google Meet Link</label>
+                                <input type="url" name="google_meet_link" class="form-control form-control-sm rounded-3" placeholder="https://meet.google.com/..." required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-medium small">WhatsApp / Phone Number</label>
+                                <!-- Add wale me placeholder rkhna, Edit wale me value="{{ $doctor->phone ?? '' }}" rkhna -->
+                                <input type="text" name="phone" class="form-control form-control-sm rounded-3" placeholder="e.g. 923001234567" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-sm btn-primary rounded-pill fw-bold">Save Doctor</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 @endsection

@@ -17,6 +17,7 @@ class Doctor extends Model
         'google_meet_link',
         'is_online',
         'hospital_id',
+        'phone',
     ];
 
     /**

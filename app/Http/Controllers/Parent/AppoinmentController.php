@@ -44,4 +44,7 @@ class AppoinmentController extends Controller
     // 5. 🔥 Sab kuch sahi hai, ab Parent ko Direct Doctor ke Google Meet par redirect kar do!
     return redirect()->away($appointment->doctor->google_meet_link);
 }
+
+
+
 }

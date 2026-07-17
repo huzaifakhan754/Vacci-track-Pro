@@ -8,7 +8,7 @@
             <span class="text-secondary text-uppercase ms-1" style="font-size:10px;letter-spacing:0.1em;">Panel</span>
         </div>
         <div id="menu" onclick="toggleMenu()">x</div>
-    </div>        
+    </div>
     <nav class="flex-grow-1 overflow-auto px-3 pb-3">
         @role('admin')
         <div class="mb-4">
@@ -92,7 +92,10 @@
                 <i class="bi bi-clipboard2-pulse"></i> Update Vaccine Status
             </a>
             <a href="{{ route('hospital.docters.index') }}" class="apex-nav-link {{ request()->routeIs('hospital.docters.*') ? 'active' : '' }}">
-                <i class="bi bi-clipboard2-pulse"></i> DR list
+                <i class="bi bi-clipboard2-pulse"></i> Doctors list
+            </a>
+            <a href="{{ route('hospital.hospital.history') }}" class="apex-nav-link {{ request()->routeIs('hospital.hospital.*') ? 'active' : '' }}">
+                <i class="bi bi-journal-medical"></i> Vaccine History
             </a>
             <a href="{{ route('profile.edit') }}" class="apex-nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
                 <i class="bi bi-person"></i> My Profile

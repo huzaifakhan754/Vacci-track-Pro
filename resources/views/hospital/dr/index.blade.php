@@ -32,6 +32,7 @@
                                 <th>Specialization</th>
                                 <th>Meeting</th>
                                 <th>Meeting Link</th>
+                                <th>Phone Number</th>
                                 <th>Date Added</th>
                                 <th>Actions</th>
                             </tr>
@@ -47,32 +48,45 @@
                                     </span>
                                 </td>
 
-                              <td class="status-cell">
-    @if($doctor->is_online == 1)
-    {{-- Green Button --}}
-    <button type="button" 
-            data-url="{{ route('hospital.docters.toggle-status', $doctor->id) }}" 
-            class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold toggle-status-btn" 
-            style="font-size: 11px;">
-        <i class="bi bi-circle-fill text-white me-1" style="font-size: 6px;"></i>Online
-    </button>
-    @else
-    {{-- Grey Button --}}
-    <button type="button" 
-            data-url="{{ route('hospital.docters.toggle-status', $doctor->id) }}" 
-            class="btn btn-sm btn-secondary rounded-pill px-2 py-1 fw-medium toggle-status-btn" 
-            style="background-color: #6B7280; border: none; font-size: 11px; color: white;">
-        <i class="bi bi-circle me-1" style="font-size: 6px;"></i> Offline
-    </button>
-    @endif
-</td>
+                                <td class="status-cell">
+                                    @if($doctor->is_online == 1)
+                                    {{-- Green Button --}}
+                                    <button type="button"
+                                        data-url="{{ route('hospital.docters.toggle-status', $doctor->id) }}"
+                                        class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold toggle-status-btn"
+                                        style="font-size: 11px;">
+                                        <i class="bi bi-circle-fill text-white me-1" style="font-size: 6px;"></i>Online
+                                    </button>
+                                    @else
+                                    {{-- Grey Button --}}
+                                    <button type="button"
+                                        data-url="{{ route('hospital.docters.toggle-status', $doctor->id) }}"
+                                        class="btn btn-sm btn-secondary rounded-pill px-2 py-1 fw-medium toggle-status-btn"
+                                        style="background-color: #6B7280; border: none; font-size: 11px; color: white;">
+                                        <i class="bi bi-circle me-1" style="font-size: 6px;"></i> Offline
+                                    </button>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($doctor->google_meet_link)
                                     <span class="text-success fw-medium">
                                         <i class="bi bi-check-circle-fill me-1"></i> Available
                                     </span>
                                     @else
-                                    <span class="text-muted">No Link</span>
+                                    <span class="text-danger fw-medium">
+                                        <i class="bi bi-x-circle-fill me-1"></i> Unavailable
+                                    </span>
+                                    @endif
+                                </td>
+                                  <td>
+                                    @if($doctor->phone)
+                                   <span class="text-success fw-medium">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Available
+                                    </span>
+                                    @else
+                                    <span class="text-danger fw-medium">
+                                        <i class="bi bi-x-circle-fill me-1"></i> Unavailable
+                                    </span>
                                     @endif
                                 </td>
                                 <td class="text-muted" style="font-size: 13px;">
@@ -199,31 +213,31 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Buttons par click event lagana
-    document.body.addEventListener('click', function (e) {
-        const button = e.target.closest('.toggle-status-btn');
-        if (!button) return;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Buttons par click event lagana
+        document.body.addEventListener('click', function(e) {
+            const button = e.target.closest('.toggle-status-btn');
+            if (!button) return;
 
-        e.preventDefault();
+            e.preventDefault();
 
-        const url = button.getAttribute('data-url');
-        const parentTd = button.closest('.status-cell');
+            const url = button.getAttribute('data-url');
+            const parentTd = button.closest('.status-cell');
 
-        // Background call
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest', // Laravel ko batata hai ke AJAX request hai
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Bina page reload kiye UI change karna
-                if (data.is_online == 1) {
-                    parentTd.innerHTML = `
+            // Background call
+            fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest', // Laravel ko batata hai ke AJAX request hai
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Bina page reload kiye UI change karna
+                        if (data.is_online == 1) {
+                            parentTd.innerHTML = `
                         <button type="button" 
                                 data-url="${url}" 
                                 class="btn btn-sm btn-success rounded-pill px-2 py-1 fw-bold toggle-status-btn" 
@@ -231,8 +245,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="bi bi-circle-fill text-white me-1" style="font-size: 6px;"></i>Online
                         </button>
                     `;
-                } else {
-                    parentTd.innerHTML = `
+                        } else {
+                            parentTd.innerHTML = `
                         <button type="button" 
                                 data-url="${url}" 
                                 class="btn btn-sm btn-secondary rounded-pill px-2 py-1 fw-medium toggle-status-btn" 
@@ -240,13 +254,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="bi bi-circle me-1" style="font-size: 6px;"></i> Offline
                         </button>
                     `;
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
     });
-});
 </script>
 @endsection

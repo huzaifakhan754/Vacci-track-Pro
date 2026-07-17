@@ -11,9 +11,7 @@ class DrController extends Controller
     // 1. Doctors ki list dikhane ke liye
     public function index()
     {
-        // 1. Logged-in user ke hospital ka record nikalna
         $hospital = auth()->user()->hospital;
-
         // Agar hospital record nahi hai, to khali array bhej dein taake error na aaye
         if (!$hospital) {
             $doctors = collect();
@@ -32,9 +30,10 @@ class DrController extends Controller
             'name' => 'required|string|max:255',
             'specialization' => 'required|string|max:255',
             'google_meet_link' => 'required|url',
+            'phone' => 'required|unique:doctors,phone,',
         ]);
 
-        // 🔥 Agat form se doctor_id aa rahi hai, to purane ko update karo (EDIT)
+        // Agat form se doctor_id a rahi hai, to purane ko update karo (EDIT)
         if ($request->has('doctor_id') && $request->doctor_id != null) {
 
             $doctor = \App\Models\Doctor::findOrFail($request->doctor_id);
@@ -42,6 +41,7 @@ class DrController extends Controller
                 'name' => $request->name,
                 'specialization' => $request->specialization,
                 'google_meet_link' => $request->google_meet_link,
+                'phone' => $request->phone,
             ]);
 
             return redirect()->back()->with('success', 'Doctor updated successfully!');
@@ -52,6 +52,7 @@ class DrController extends Controller
             'name' => $request->name,
             'specialization' => $request->specialization,
             'google_meet_link' => $request->google_meet_link,
+            'phone' => $request->phone,
             'hospital_id' => auth()->user()->hospital_id ?? 11, // Auto hospital mapping
             'is_online' => 0,
         ]);
@@ -59,35 +60,35 @@ class DrController extends Controller
         return redirect()->back()->with('success', 'New doctor added successfully!');
     }
     public function toggleStatus($id)
-{
-    // 1. Doctor ko database se dhoondein
-    $doctor = \App\Models\Doctor::findOrFail($id);
+    {
+        // 1. Doctor ko database se dhoondein
+        $doctor = \App\Models\Doctor::findOrFail($id);
 
-    // 2. Status toggle karein
-    $doctor->is_online = $doctor->is_online == 1 ? 0 : 1;
-    $doctor->save();
+        // 2. Status toggle karein
+        $doctor->is_online = $doctor->is_online == 1 ? 0 : 1;
+        $doctor->save();
 
-    // 3. AGAR REQUEST AJAX SE HAI (Naya Tarika): Bina reload JSON response bhejo
-    if (request()->ajax() || request()->wantsJson()) {
-        return response()->json([
-            'success' => true,
-            'is_online' => $doctor->is_online,
-            'message' => 'Doctor status updated successfully!'
-        ]);
+        // 3. AGAR REQUEST AJAX SE HAI (Naya Tarika): Bina reload JSON response bhejo
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'is_online' => $doctor->is_online,
+                'message' => 'Doctor status updated successfully!'
+            ]);
+        }
+
+        // 4. AGAR NORMAL REQUEST HAI (Purana Tarika Fallback): Page ko refresh kar do
+        return redirect()->back()->with('success', 'Doctor status updated successfully!');
     }
-
-    // 4. AGAR NORMAL REQUEST HAI (Purana Tarika Fallback): Page ko refresh kar do
-    return redirect()->back()->with('success', 'Doctor status updated successfully!');
-}
     public function destroy($id)
-{
-    // 1. Doctor ko ID se dhoondein
-    $doctor = \App\Models\Doctor::findOrFail($id);
-    
-    // 2. Database se delete marein
-    $doctor->delete();
+    {
+        // 1. Doctor ko ID se dhoondein
+        $doctor = \App\Models\Doctor::findOrFail($id);
 
-    // 3. Wapas bhej dein fresh success message ke sath
-    return redirect()->back()->with('success', 'Doctor deleted successfully!');
-}
+        // 2. Database se delete marein
+        $doctor->delete();
+
+        // 3. Wapas bhej dein fresh success message ke sath
+        return redirect()->back()->with('success', 'Doctor deleted successfully!');
+    }
 }
