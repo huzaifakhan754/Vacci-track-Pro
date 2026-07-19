@@ -15,17 +15,13 @@ class DashboardController extends Controller
     {
         $totalChildren = Child::count();
         $totalHospitals = Hospital::count();
-        $upcomingVaccinations = VaccinationSchedule::where('scheduled_date', '>=', now()->toDateString())
-            ->where('status', 'upcoming')
-            ->count();
+        $upcomingVaccinations = ParentRequest::where('status', 'approved')->count();
         $pendingRequests = ParentRequest::where('status', 'pending')->count();
+        $recentSchedules = ParentRequest::all();
 
-        $recentSchedules = VaccinationSchedule::with(['child', 'vaccine'])
-            ->where('scheduled_date', '>=', now()->toDateString())
-            ->where('status', 'upcoming')
-            ->orderBy('scheduled_date')
-            ->limit(10)
-            ->get();
+       $allRequests = ParentRequest::with(['child.parent', 'vaccine'])
+        ->latest()
+        ->get();
 
         return view('admin.dashboard', compact(
             'totalChildren',
@@ -33,6 +29,7 @@ class DashboardController extends Controller
             'upcomingVaccinations',
             'pendingRequests',
             'recentSchedules',
+            'allRequests',
         ));
     }
 }

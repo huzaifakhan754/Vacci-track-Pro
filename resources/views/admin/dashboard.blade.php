@@ -122,9 +122,9 @@
         </div>
     </div>
 
-    <div class="apex-panel">
+  <div class="apex-panel">
         <div class="apex-panel-header d-flex justify-content-between align-items-center">
-            <h2>Upcoming Vaccination Dates</h2>
+            <h2>Vaccination Requests & History</h2>
             <a href="{{ route('admin.vaccination-dates.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
         </div>
         <div class="table-responsive">
@@ -132,22 +132,75 @@
                 <thead>
                     <tr>
                         <th class="ps-3">Child</th>
+                        <th>Parent</th>
                         <th>Vaccine</th>
-                        <th>Date</th>
+                        <th>Hospital</th>
+                        <th>Doctor Name</th>
+                        <th>Date & Time</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($recentSchedules as $schedule)
+                    @forelse ($allRequests as $schedule)
+                        @php
+                            // Date aur time ko bina crash kiye display karne ke liye parse kiya
+                            $dateObj = $schedule->preferred_date ? \Carbon\Carbon::parse($schedule->preferred_date) : \Carbon\Carbon::parse($schedule->created_at);
+                        @endphp
                         <tr>
-                            <td class="ps-3 fw-medium">{{ $schedule->child->name }}</td>
-                            <td>{{ $schedule->vaccine->name }}</td>
-                            <td>{{ $schedule->scheduled_date->format('M d, Y') }}</td>
-                            <td><span class="badge rounded-pill bg-warning text-dark">{{ ucfirst($schedule->status) }}</span></td>
+                            <!-- Child Name -->
+                            <td class="ps-3 fw-medium text-capitalize">
+                                 <div class="avatar-sm bg-light text-primary rounded-circle p-2 me-2 d-inline-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                {{ $schedule->child->name ?? $schedule->child_name ?? 'N/A' }}
+                            </td>
+                            
+                            <!-- Parent Name -->
+                            <td class="text-secondary text-capitalize">
+                                {{ $schedule->child->parent->name ?? 'N/A' }}
+                            </td>
+
+                            <!-- Vaccine Name -->
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ $schedule->vaccine->name ?? $schedule->vaccine_name ?? 'N/A' }}
+                                </span>
+                            </td>
+                            <!-- Hospital Name -->
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ $schedule->hospital->name ?? 'N/A' }}
+                                </span>
+                            </td>
+                            <!-- Doctor Name -->
+                             <td>
+                                <span class="text-secondary text-capitalize">
+                                    {{ $schedule->Doctor->name ?? 'N/A' }}
+                                </span>
+                             </td>
+                            <!-- Date & Time -->
+                            <td>
+                                <span class="fw-semibold text-dark">{{ $dateObj->format('M d, Y') }}</span>
+                                <span class="text-muted small d-block">{{ \Carbon\Carbon::parse($schedule->created_at)->format('h:i A') }}</span>
+                            </td>
+                            <!-- Dynamic Status Badges -->
+                            <td>
+                                @if(in_array(strtolower($schedule->status), ['vaccinated', 'vaccinnated']))
+                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success border-opacity-25 px-2.5 py-1">Vaccinated</span>
+                                @elseif(strtolower($schedule->status) == 'approved')
+                                    <span class="badge rounded-pill bg-info-subtle text-info border border-info border-opacity-25 px-2.5 py-1">Approved</span>
+                                @elseif(strtolower($schedule->status) == 'not_vaccinated')
+                                    <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger border-opacity-25 px-2.5 py-1">Not_Vaccinated</span>
+                                @elseif(strtolower($schedule->status) == 'rejected')
+                                    <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger border-opacity-25 px-2.5 py-1">Rejected</span>
+                                @else
+                                    <span class="badge rounded-pill bg-warning text-dark px-2.5 py-1">Panding</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-4">No upcoming vaccinations scheduled.</td>
+                            <td colspan="5" class="text-center text-muted py-4">No vaccination records found.</td>
                         </tr>
                     @endforelse
                 </tbody>

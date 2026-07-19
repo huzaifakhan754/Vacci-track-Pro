@@ -24,6 +24,7 @@ class ParentRequestController extends Controller
     public function index(): View
     {
         $requests = ParentRequest::with(['parent', 'child', 'hospital', 'vaccine'])
+            ->where('status', 'pending')
             ->latest()
             ->get();
 

@@ -68,7 +68,11 @@
                             @endif
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">No parent requests at this time.</td>
+                                <!-- colspan="7" ko badal kar 8 kar diya h -->
+                                <td colspan="8" class="text-center text-muted py-5">
+                                    <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
+                                    No new pending parent requests at this time.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

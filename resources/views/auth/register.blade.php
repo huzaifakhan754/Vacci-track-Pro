@@ -101,7 +101,7 @@
 
                         <!-- Submit Button -->
                         <div class="d-grid">
-                            <x-primary-button class="btn btn-primary btn-sm py-2 fw-medium rounded-3 shadow-sm border-0  btn-custom-blue">
+                            <x-primary-button class="btn d-flex align-items-center justify-content-center btn-primary btn-sm py-2 fw-medium rounded-3 shadow-sm border-0  btn-custom-blue">
                                 {{ __('Register') }}
                             </x-primary-button>
                         </div>
