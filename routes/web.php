@@ -17,13 +17,11 @@ use App\Http\Controllers\Parent\VaccinationDateController as ParentVaccinationDa
 use App\Http\Controllers\Parent\VaccinationReportController as ParentVaccinationReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Hospital\DrController;
+use App\Http\Controllers\landingController;
 // use App\Http\Controllers\Hospital\HistoryController;
 use App\Http\Controllers\Parent\appoinmentController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [landingController::class, 'index']);
 
 Route::prefix('admin')->middleware(['auth', 'role.admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -38,6 +36,7 @@ Route::prefix('admin')->middleware(['auth', 'role.admin'])->name('admin.')->grou
     Route::post('/requests/{parentRequest}/reject', [ParentRequestController::class, 'reject'])->name('requests.reject');
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::resource('hospitals', HospitalController::class)->except(['show']);
+    Route::post('/vaccine/insert', [vaccineController::class, 'insert'])->name('vaccines.store');
 });
 
 Route::prefix('parent')->middleware(['auth', 'verified', 'role.parent'])->name('parent.')->group(function () {

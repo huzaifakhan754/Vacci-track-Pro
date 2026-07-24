@@ -123,12 +123,12 @@
             <div class="row">
                 <div class="col-md-4 stat-item reveal">
                     <div class="stat-icon"><i class="bi bi-hospital"></i></div>
-                    <div class="stat-number" data-count="6">0+</div>
+                    <div class="stat-number" data-count="{{ $hospital }}">0 +</div>
                     <div class="stat-label">Partner Hospitals</div>
                 </div>
                 <div class="col-md-4 stat-item reveal">
                     <div class="stat-icon"><i class="bi bi-emoji-smile"></i></div>
-                    <div class="stat-number" data-count="100">0+</div>
+                    <div class="stat-number" data-count="{{$vaccinated}}}}">0+</div>
                     <div class="stat-label">Vaccinated Children</div>
                 </div>
                 <div class="col-md-4 stat-item reveal">
