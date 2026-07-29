@@ -25,7 +25,14 @@ class HospitalBookingController extends Controller
 
         return view('parent.bookings.index', compact('hospitals', 'children', 'vaccines', 'requests'));
     }
+    public function getBookedVaccines($childId)
+    {
+        $vaccines = ParentRequest::where('parent_id', auth()->id())
+            ->where('child_id', $childId)
+            ->pluck('vaccine_id');
 
+        return response()->json($vaccines);
+    }
 
 
     public function store(Request $request): RedirectResponse

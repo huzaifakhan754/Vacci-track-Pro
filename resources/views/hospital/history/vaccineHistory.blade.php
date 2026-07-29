@@ -47,8 +47,8 @@
                                 <th style="width: 80px;">SR #</th>
                                 <th>Child Name</th>
                                 <th>Parent Name</th>
-                                <th>Vaccine Given</th>
                                 <th>Doctor Name</th>
+                                <th>Vaccine Given</th>
                                 <th>Vaccination Date</th>
                                 <th>Status</th>
                             </tr>

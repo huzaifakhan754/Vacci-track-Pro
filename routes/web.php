@@ -55,6 +55,7 @@ Route::prefix('parent')->middleware(['auth', 'verified', 'role.parent'])->name('
     /// api
     Route::get('/api/get-doctors/{hospital_id}', [HospitalBookingController::class, 'getDoctorsByHospital']);
     Route::get('/api/doctor-status/{doctor_id}', [App\Http\Controllers\Parent\HospitalBookingController::class, 'getDoctorStatus']);
+    Route::get('/api/booked-vaccines/{child}', [HospitalBookingController::class, 'getBookedVaccines']);
 });
 
 

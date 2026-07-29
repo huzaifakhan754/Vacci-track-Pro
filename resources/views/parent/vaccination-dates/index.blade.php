@@ -73,7 +73,7 @@
                                 <small class="text-xs d-block text-capitalize">{{ \Carbon\Carbon::parse($vaccine['due_date'])->format('l') }}</small>
                             </td>
 
-                            {{-- Khubsoorat Dynamic Time Badge --}}
+                            {{-- Dynamic Time Badge --}}
                             <td class="py-3">
                                 @if($daysLeft == 0)
                                 <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 rounded-pill fw-bold animate__animated animate__pulse animate__infinite">

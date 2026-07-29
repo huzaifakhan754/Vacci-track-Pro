@@ -25,7 +25,7 @@ class VaccinationDateController extends Controller
         // 2. Automatic Vaccination Schedule Loop
         $upcomingVaccines = [];
         $scheduleTemplate = [
-            ['name' => 'BCG (Tuberculosis)', 'days_after_birth' => 0],
+            ['name' => 'BCG (Tuberculosis)','days_after_birth' => 0],
             ['name' => 'Polio Booster - Dose 1', 'days_after_birth' => 42],
             ['name' => 'Pentavalent - Dose 1', 'days_after_birth' => 42],
             ['name' => 'Measles - Dose 1', 'days_after_birth' => 270],
