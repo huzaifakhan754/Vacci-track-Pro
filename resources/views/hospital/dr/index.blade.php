@@ -180,7 +180,6 @@
                     <div class="modal-body">
                         <form action="{{ route('hospital.docters.store') }}" method="POST">
                             @csrf
-
                             <div class="mb-3">
                                 <label class="form-label fw-medium small">Doctor Name</label>
                                 <input type="text" name="name" class="form-control form-control-sm rounded-3" placeholder="Enter doctor name" required>

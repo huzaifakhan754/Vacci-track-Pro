@@ -3,6 +3,12 @@
 @section('title', 'Book Hospital - VacciTrack')
 
 @section('content')
+<style>
+    #my-req{
+        height: 50vh;
+        overflow: scroll;
+    }
+</style>
 <div class="mb-4">
     <div class="apex-page-heading mb-4">
         <h1>Book Hospital</h1>
@@ -135,7 +141,7 @@
             <div class="apex-panel-header">
                 <h2 class="h6 mb-0">My Requests</h2>
             </div>
-            <div class="card-body p-0">
+            <div id="my-req" class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0 align-middle">
                         <thead>

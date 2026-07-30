@@ -53,7 +53,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">
+                            <td colspan="7" class="text-center py-4 text-muted">
                                 No completed vaccination reports available yet.
                             </td>
                         </tr>
