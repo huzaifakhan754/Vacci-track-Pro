@@ -5,7 +5,7 @@
 @section('content')
 <style>
     #my-req{
-        height: 50vh;
+        height: 60vh;
         overflow: scroll;
     }
 </style>

@@ -49,7 +49,7 @@
 
 <div class="apex-panel">
     <div class="apex-panel-header d-flex justify-content-between align-items-center">
-        <h2>Upcoming Vaccination Dates</h2>
+        <h2>Upcoming Vaccination Scheduled</h2>
         <a href="{{ route('parent.vaccination-dates.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
     </div>
     <div class="table-responsive">
@@ -60,6 +60,7 @@
                     <th>Vaccine</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody class="align-middle">

@@ -262,7 +262,7 @@
         @empty
             <div class="col-12 text-center py-5 rounded-4 appt-card bg-white shadow-sm">
                 <i class="bi bi-calendar2-x d-block text-secondary mb-3" style="font-size: 3rem;"></i>
-                <h5 class="fw-bold text-slate-800 mb-1">No Appointments Found</h5>
+                <h5 class="fw-bold text-slate-800 mb-1">No Appointments Book</h5>
                 <p class="small text-muted mb-0">You don't have any active pending or approved vaccination requests right now.</p>
             </div>
         @endforelse
